@@ -183,27 +183,13 @@ const RegisterPage = () => {
     const { email, password } = formData;
 
     try {
-      const registrationData = {
-        fullName: formData.fullName,
-        age: formData.age,
-        zodiacSign: formData.zodiacSign,
-        skinType: formData.skinType,
-        gender: formData.gender,
-        avatarUrl: "",
-        birthDate: formData.birthDate || "",
-        birthTime: formData.birthTime || "",
-        birthPlace: formData.birthPlace || "",
-      };
-
-      // Create profile data object excluding email and password
-      const { email: _email, password: _password, confirmPassword: _confirmPassword, ...profileData } = formData;
+      // Create profile data object excluding password
+      const { password: _password, confirmPassword: _confirmPassword, ...options } = formData;
       
       // Ensure avatarUrl has a default value
-      profileData.avatarUrl = profileData.avatarUrl || "";
+      options.avatarUrl = options.avatarUrl || "";
       
-      const result = await signUp(email, password, profileData);
-
-      // const result = await signUp(email, password, profileData);
+      const result = await signUp(email, password, options);
       const authError = result?.error || result?.data?.user === null;
 
       if (authError) {

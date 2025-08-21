@@ -16,6 +16,7 @@ const AuthContext = createContext(undefined);
 const mapToProfileColumns = (data) => {
   const payload = {};
   if (data.fullName) payload.full_name = data.fullName;
+  // if (data.fullName) payload.last_name = data.fullName.split(' ')[1] || '';
   if (data.avatarUrl) payload.avatar_url = data.avatarUrl;
   if (data.age) payload.age = data.age;
   if (data.zodiacSign) payload.zodiac_sign = data.zodiacSign;
@@ -83,18 +84,19 @@ export const AuthProvider = ({ children }) => {
   }, [handleSession]);
 
   const signUp = useCallback(
-    async (email, password, profileData = {}) => {
+    async (email, password, options = {}) => {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
-        profileData: {
-          data: {
-            full_name: profileData.fullName,
-            avatar_url: profileData.avatarUrl || '',
-            ...mapToProfileColumns(profileData)
-          }
-        }
+        options: {  // Also changed this from profileData to options to match the function signature
+          authData: {  // Changed this form data to authData to check if it was a variable naming issue, I guess it wasn't
+            ...mapToProfileColumns(options)
+          },
+        },
       });
+
+      console.log('Printing 1')
+      console.log({authData});
 
       if (authError) {
         toast({
@@ -114,9 +116,15 @@ export const AuthProvider = ({ children }) => {
         return { error: 'User creation failed.' };
       }
 
-      const userId = authData?.user?.id;
-      const profilePayload = mapToProfileColumns(profileData);
+      console.log('printing 2')
 
+      const userId = authData?.user?.id;
+      console.log('Printing 3')
+      console.log({options});
+
+      const profilePayload = mapToProfileColumns(options);
+
+      console.log({profilePayload});
       const { error: profileError } = await supabase.from('profiles').insert([
         {
           id: userId,
@@ -124,8 +132,8 @@ export const AuthProvider = ({ children }) => {
           friends: [],
           points: 100,
           total_advice_upvotes: 0,
-          full_name: profileData.fullName,
-          avatar_url: profileData.avatarUrl || '',
+          // full_name: options.fullName,
+          // avatar_url: options.avatarUrl || '',
           ...profilePayload
         },
       ]);
