@@ -44,3 +44,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.zip
+
+
+# misc
+/public_html_backup
+public_html_backup

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Star, Moon, Sun, Sparkles, Edit, Leaf, Calendar, Clock, MapPin } from 'lucide-react';
+import { Star, Moon, Sun, Sparkles, Edit, Leaf, Calendar, Clock, MapPin, ShoppingCart } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 // --- CHILD COMPONENTS (Refactored for Dynamic Data) ---
 
 const DailyInsights = ({ insights }) => (
+    // This component displays the user's daily cosmic insights.
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }} className="mb-8">
         <Card className="glass-card border-white/20">
             <CardHeader>
@@ -23,7 +24,8 @@ const DailyInsights = ({ insights }) => (
                 <CardDescription className="text-white/70">Personalized guidance for your beauty journey today, based on your Zodiac sign.</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="grid md:grid-cols-3 gap-6">
+                {/* Responsive Grid: Stacks to 1 column on mobile, 3 on medium screens and up. */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="text-center p-4 rounded-lg bg-black/20 border border-white/10">
                         <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-3"><Sun className="w-6 h-6 text-white" /></div>
                         <h3 className="text-white font-semibold mb-2">Daily Insight</h3>
@@ -47,6 +49,7 @@ const DailyInsights = ({ insights }) => (
 
 
 const Readings = ({ user, reading }) => {
+    // This component shows personalized birth details and a real-time beauty tip card.
     const { toast } = useToast();
 
     const beautyReadings = [
@@ -80,7 +83,8 @@ const Readings = ({ user, reading }) => {
     };
 
     return (
-        <div className="grid lg:grid-cols-2 gap-6">
+        // Responsive Grid: Stacks to 1 column on mobile/tablet, 2 columns on large screens.
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card className="glass-card border-white/20">
                 <CardHeader>
                     <CardTitle className="text-white playfair">Your Cosmic Essence</CardTitle>
@@ -158,6 +162,7 @@ const Readings = ({ user, reading }) => {
 };
 
 const PremiumReports = ({ user, onPurchase }) => {
+    // This component displays premium reports available for purchase with points.
     const { toast } = useToast();
     const handlePurchase = (reportName, cost) => {
         if (!user) {
@@ -174,7 +179,8 @@ const PremiumReports = ({ user, onPurchase }) => {
                 <CardDescription className="text-white/70">Unlock deeper insights into your cosmic beauty.</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
+                {/* Responsive Grid: Stacks to 1 column on mobile, 2 columns on medium screens and up. */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="p-6 rounded-lg bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30">
                         <h3 className="text-white font-semibold text-xl mb-3">Complete Beauty Chart</h3>
                         <p className="text-white/80 mb-4">A comprehensive analysis of your birth chart with a focus on beauty, style, and personal enhancement.</p>
@@ -202,6 +208,7 @@ const PremiumReports = ({ user, onPurchase }) => {
 };
 
 const BeautyTips = ({ user, beautyTips }) => {
+    // This component shows a personalized beauty tip and tips for other zodiac signs.
     const userSign = user?.profile?.zodiac_sign;
     const personalTip = beautyTips.find(tip => tip.sign === userSign);
     const otherTips = beautyTips.filter(tip => tip.sign !== userSign);
@@ -221,7 +228,8 @@ const BeautyTips = ({ user, beautyTips }) => {
                     </Card>
                 </motion.div>
             )}
-            <div className="grid md:grid-cols-2 gap-6">
+            {/* Responsive Grid: Stacks to 1 column on mobile, 2 on medium screens and up. */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {otherTips.map((tip, index) => (
                     <motion.div key={tip.sign} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: index * 0.1 }}>
                         <Card className="glass-card border-white/20 h-full">
@@ -240,6 +248,7 @@ const BeautyTips = ({ user, beautyTips }) => {
 };
 
 const MoonPhases = () => {
+    // This component provides a guide to beauty routines based on moon phases.
     const phases = [
         { phase: "New Moon", activity: "Fresh starts, new routines", icon: "🌑" },
         { phase: "Waxing Moon", activity: "Building treatments, growth", icon: "🌓" },
@@ -257,11 +266,12 @@ const MoonPhases = () => {
             </CardHeader>
             <CardContent>
                 <div className="text-center mb-8">
-                    <img className="w-48 h-48 mx-auto rounded-full mb-4 object-cover" alt="Moon phases diagram" src="https://images.unsplash.com/photo-1595639546396-99140afe3a0d" />
+                    <img className="w-48 h-48 mx-auto rounded-full mb-4 object-cover" alt="Moon phases diagram" src="https://images.unsplash.com/photo-1595639546396-99140afe3a0d?q=80&w=2070&auto=format&fit=crop" />
                     <h3 className="text-xl font-semibold text-white mb-2">Current Phase: Waxing Gibbous</h3>
                     <p className="text-white/70">Perfect time for building and enhancing treatments</p>
                 </div>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Responsive Grid: 1 col on mobile, 2 on small screens, 4 on large screens. */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {phases.map((phase, index) => (
                         <div key={index} className="p-4 rounded-lg bg-black/20 border border-white/10 text-center">
                             <div className="text-3xl mb-2">{phase.icon}</div>
@@ -274,6 +284,61 @@ const MoonPhases = () => {
         </Card>
     );
 };
+
+const ProductRecommendations = () => {
+    // This component displays recommended products.
+    const { toast } = useToast();
+    const productRecommendations = [
+        { name: 'Celestial Glow Serum', description: 'A lightweight serum infused with meteorite dust for ultimate radiance.', price: '$45', image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=1932&auto=format&fit=crop' },
+        { name: 'Lunar Dream Cream', description: 'A rich night cream that works with the lunar cycle to rejuvenate your skin.', price: '$55', image: 'https://images.unsplash.com/photo-1628087942993-e40e3478955b?q=80&w=1964&auto=format&fit=crop' },
+        { name: 'Solar Flare Sunscreen', description: 'Broad-spectrum SPF 50 that protects and gives a sun-kissed look.', price: '$35', image: 'https://images.unsplash.com/photo-1621643211339-add968798935?q=80&w=1964&auto=format&fit=crop' }
+    ];
+
+    const handleAddToCart = (productName) => {
+        toast({
+            title: "🚧 Feature in Development",
+            description: `Adding ${productName} to cart isn't implemented yet—but you can request it! �`,
+        });
+    };
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mt-8" // Added margin top for spacing
+        >
+            <Card className="glass-card border-white/20">
+                <CardHeader>
+                    <CardTitle className="text-white playfair text-2xl">Essential Product Recommendations</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {/* Responsive Grid: 1 col on mobile, 2 on small screens, 3 on medium screens. */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {productRecommendations.map((product, index) => (
+                            <Card key={index} className="bg-white/5 border-white/10 flex flex-col">
+                                <CardHeader>
+                                    <img src={product.image} alt={product.name} className="w-full h-40 object-cover rounded-md mb-4" />
+                                    <CardTitle className="text-white">{product.name}</CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex flex-col flex-grow">
+                                    <p className="text-white/80 text-sm mb-4 flex-grow">{product.description}</p>
+                                    <div className="flex flex-wrap justify-between items-center gap-2">
+                                        <span className="text-xl font-bold text-yellow-400">{product.price}</span>
+                                        <Button onClick={() => handleAddToCart(product.name)} variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                                            <ShoppingCart className="w-4 h-4 mr-2" /> Add to Cart
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
+        </motion.div>
+    );
+};
+
 
 // --- MAIN ASTROLOGY PAGE ---
 
@@ -348,10 +413,11 @@ const AstrologyPage = ({ setIsLoading }) => {
             </Helmet>
             <div className="min-h-screen cosmic-bg">
                 <Navigation />
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center mb-8">
-                        <h1 className="text-4xl md:text-5xl font-bold playfair gold-gradient-text mb-4">Cosmic Beauty Guidance</h1>
-                        <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto">Let the stars guide your beauty journey with personalized insights.</p>
+                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center mb-8 md:mb-12">
+                        {/* Responsive Typography: Adjusted font sizes for different breakpoints. */}
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold playfair gold-gradient-text mb-4">Cosmic Beauty Guidance</h1>
+                        <p className="text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto">Let the stars guide your beauty journey with personalized insights.</p>
                     </motion.div>
 
                     {user ? (
@@ -359,7 +425,8 @@ const AstrologyPage = ({ setIsLoading }) => {
                             <DailyInsights insights={astrologyContent} />
                             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
                                 <Tabs defaultValue="readings" className="w-full">
-                                    <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 glass-card border-white/20">
+                                    {/* Responsive Tabs: 2 columns on mobile, 4 on small screens and up. */}
+                                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 glass-card border-white/20 h-auto p-1">
                                         <TabsTrigger value="readings" className="text-white data-[state=active]:bg-white/20">Reading</TabsTrigger>
                                         <TabsTrigger value="beauty-tips" className="text-white data-[state=active]:bg-white/20">Beauty Tips</TabsTrigger>
                                         <TabsTrigger value="moon-phases" className="text-white data-[state=active]:bg-white/20">Moon Phases</TabsTrigger>
@@ -371,6 +438,7 @@ const AstrologyPage = ({ setIsLoading }) => {
                                     <TabsContent value="premium" className="mt-6"><PremiumReports user={user} onPurchase={handlePurchase} /></TabsContent>
                                 </Tabs>
                             </motion.div>
+                            <ProductRecommendations />
                         </>
                     ) : (
                         <Card className="glass-card border-white/20 text-center py-12">
@@ -378,7 +446,7 @@ const AstrologyPage = ({ setIsLoading }) => {
                             <CardContent><Link to="/login"><Button>Log In</Button></Link></CardContent>
                         </Card>
                     )}
-                </div>
+                </main>
             </div>
         </>
     );

@@ -103,8 +103,8 @@ function extractHelmetData(content, filePath, routes) {
   const description = cleanText(descMatch?.[1]);
   
   const fileName = path.basename(filePath, path.extname(filePath));
-  const url = routes.length && routes.has(fileName) 
-    ? routes.get(fileName) 
+  const url = routes.size && routes.has(fileName)
+    ? routes.get(fileName)
     : generateFallbackUrl(fileName);
   
   return {
@@ -151,14 +151,23 @@ function main() {
   let pages = [];
   
   if (!fs.existsSync(pagesDir)) {
+    console.log('Pages directory does not exist, processing App.jsx');
     pages.push(processPageFile(appJsxPath, []));
   } else {
+    console.log('Pages directory exists, processing pages');
     const routes = extractRoutes(appJsxPath);
+    console.log('Routes extracted:', routes);
     const reactFiles = findReactFiles(pagesDir);
+    console.log('React files found:', reactFiles);
 
     pages = reactFiles
-      .map(filePath => processPageFile(filePath, routes))
+      .map(filePath => {
+        console.log('Processing file:', filePath);
+        return processPageFile(filePath, routes);
+      })
       .filter(Boolean);
+    
+    console.log('Pages with Helmet data:', pages);
     
     if (pages.length === 0) {
       console.error('❌ No pages with Helmet components found!');

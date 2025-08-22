@@ -16,7 +16,6 @@ const AuthContext = createContext(undefined);
 const mapToProfileColumns = (data) => {
   const payload = {};
   if (data.fullName) payload.full_name = data.fullName;
-  // if (data.fullName) payload.last_name = data.fullName.split(' ')[1] || '';
   if (data.avatarUrl) payload.avatar_url = data.avatarUrl;
   if (data.age) payload.age = data.age;
   if (data.zodiacSign) payload.zodiac_sign = data.zodiacSign;
@@ -83,71 +82,110 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, [handleSession]);
 
+  // const signUp = useCallback(
+  //   async (email, password, options = {}) => {
+  //     const { data, error } = await supabase.auth.signUp({
+  //       email,
+  //       password,
+  //       options: { 
+  //         data: {
+  //           ...mapToProfileColumns(options)
+  //         },
+  //       },
+  //     });
+
+  //     console.log('Printing 1')
+  //     console.log({data});
+
+  //     if (error) {
+  //       toast({
+  //         variant: 'destructive',
+  //         title: 'Sign up Failed',
+  //         description: authError.message || 'Something went wrong',
+  //       });
+  //       return { error : error  };
+  //     }
+
+  //     if (!data.user) {
+  //       toast({
+  //         variant: 'destructive',
+  //         title: 'Sign up Incomplete',
+  //         description: 'Could not create user. Please try again.',
+  //       });
+  //       return { error: 'User creation failed.' };
+  //     }
+
+  //     console.log('printing 2')
+
+  //     const userId = data?.user?.id;
+  //     console.log('Printing 3')
+  //     console.log({options});
+
+  //     const profilePayload = mapToProfileColumns(options);
+
+  //     console.log({profilePayload});
+  //     const { error: profileError } = await supabase.from('profiles').insert([
+  //       {
+  //         id: userId,
+  //         email,
+  //         friends: [],
+  //         points: 100,
+  //         total_advice_upvotes: 0,
+  //         // full_name: options.fullName,
+  //         // avatar_url: options.avatarUrl || '',
+  //         ...profilePayload
+  //       },
+  //     ]);
+
+
+  //     if (profileError) {
+  //       toast({
+  //         variant: 'destructive',
+  //         title: 'Profile Creation Failed',
+  //         description: profileError.message || 'Something went wrong',
+  //       });
+  //     }
+
+  //     return { error: profileError };
+  //   },
+  //   [toast]
+  // );
+
+
   const signUp = useCallback(
     async (email, password, options = {}) => {
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      // This function converts your frontend's camelCase data (e.g., fullName)
+      // to snake_case data (e.g., full_name), which matches your database table columns.
+      // This is the correct data to send to the trigger.
+      const profileData = options;
+
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {  // Also changed this from profileData to options to match the function signature
-          authData: {  // Changed this form data to authData to check if it was a variable naming issue, I guess it wasn't
-            ...mapToProfileColumns(options)
-          },
+        options: {
+          data: profileData,
         },
       });
 
-      console.log('Printing 1')
-      console.log({authData});
-
-      if (authError) {
+      if (error) {
         toast({
           variant: 'destructive',
           title: 'Sign up Failed',
-          description: authError.message || 'Something went wrong',
+          description: error.message || 'Something went wrong',
         });
-        return { error: authError };
+        return { error };
       }
 
-      if (!authData.user) {
+      if (!data.user) {
         toast({
           variant: 'destructive',
           title: 'Sign up Incomplete',
           description: 'Could not create user. Please try again.',
         });
-        return { error: 'User creation failed.' };
+        return { error: new Error('User creation failed.') };
       }
-
-      console.log('printing 2')
-
-      const userId = authData?.user?.id;
-      console.log('Printing 3')
-      console.log({options});
-
-      const profilePayload = mapToProfileColumns(options);
-
-      console.log({profilePayload});
-      const { error: profileError } = await supabase.from('profiles').insert([
-        {
-          id: userId,
-          email,
-          friends: [],
-          points: 100,
-          total_advice_upvotes: 0,
-          // full_name: options.fullName,
-          // avatar_url: options.avatarUrl || '',
-          ...profilePayload
-        },
-      ]);
-
-
-      if (profileError) {
-        toast({
-          variant: 'destructive',
-          title: 'Profile Creation Failed',
-          description: profileError.message || 'Something went wrong',
-        });
-      }
-
-      return { error: profileError };
+    
+      return { data, error: null };
     },
     [toast]
   );
