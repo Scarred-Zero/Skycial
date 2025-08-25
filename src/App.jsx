@@ -32,7 +32,7 @@ function App() {
       <Router>
         <div className="min-h-screen relative">
           <StarField />
-          {isLoading && <LoadingSpinner text="Summoning stardust and moonbeams..." />}
+          {isLoading && <LoadingSpinner text="Consulting the stars..." />}
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/register" element={<RegisterPage />} />

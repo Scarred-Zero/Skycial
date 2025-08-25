@@ -47,7 +47,6 @@ const DailyInsights = ({ insights }) => (
     </motion.div>
 );
 
-
 const Readings = ({ user, reading }) => {
     // This component shows personalized birth details and a real-time beauty tip card.
     const { toast } = useToast();
@@ -350,11 +349,12 @@ const AstrologyPage = ({ setIsLoading }) => {
     const { toast } = useToast();
 
     const fetchData = useCallback(async () => {
-        setIsLoading(true);
         setLoading(true);
 
         const currentUser = await getUser();
         setUser(currentUser);
+
+
 
         const { data: contentData, success } = await getAstrologyContent();
 
@@ -378,7 +378,6 @@ const AstrologyPage = ({ setIsLoading }) => {
         }
 
         setLoading(false);
-        setIsLoading(false);
     }, [setIsLoading]);
 
     useEffect(() => {
@@ -403,7 +402,7 @@ const AstrologyPage = ({ setIsLoading }) => {
     };
 
     if (loading) {
-        return <LoadingSpinner text="Consulting the cosmos..." />;
+        return <LoadingSpinner text="Consulting the Cosmos..." />;
     }
 
     return (

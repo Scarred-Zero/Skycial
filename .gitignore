@@ -50,3 +50,5 @@ dist-ssr
 # misc
 /public_html_backup
 public_html_backup
+/horizons-export
+horizons-export
